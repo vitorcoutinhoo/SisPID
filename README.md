@@ -1,6 +1,6 @@
 # SisPID
 
-### Vídeos
+### Vídeo
 
-#### Funcionamento do sistema com o BD já preenchido: [Sistema funcionando - Vídeo 1](https://youtu.be/zq1tXtAKGoc)
-#### Funcionamento do sistema com o BD não preenchido: [Sistema funcionando - Vídeo 2](https://youtu.be/0xqdQi--7M0)
+Vídeo mostrando o funcionamento e a estrutura do projeto.
+#### Funcionamento do sistema: [Sistema funcionando - Youtube](https://youtu.be/Ez8kzoGIM5U)
