@@ -278,21 +278,7 @@ def salvar_historico_evolutivo(metodo, geracao, melhor_fitness, fitness_medio, p
         print(f"Erro ao salvar histórico: {e}")
 
 
-# ============================================================================
-# FUNÇÕES DE ROBUSTEZ INTEGRADAS
-# ============================================================================
-
-CENARIOS_ROBUSTEZ = {
-    "Nominal": {"K_term": 59.81, "tau": 401.61, "desc": "Condições nominais"},
-    "C1": {"K_term": 53.83, "tau": 401.61, "desc": "Degradação aquecedor (-10%)"},
-    "C2": {"K_term": 65.79, "tau": 401.61, "desc": "Aquecedor eficiente (+10%)"},
-    "C3": {"K_term": 59.81, "tau": 361.45, "desc": "Menor capacidade térmica (-10%)"},
-    "C4": {"K_term": 59.81, "tau": 441.77, "desc": "Maior capacidade térmica (+10%)"},
-    "C5": {"K_term": 53.83, "tau": 441.77, "desc": "Cenário combinado (pior caso)"}
-}
-
-
-def testar_robustez(metodo, Kp, Ki, Kd, t_sim, setpoint=80.0, db_path="db/pid_results.db"):
+def testar_robustez(metodo, Kp, Ki, Kd, t_sim, k_term, tau, setpoint=80.0, db_path="db/pid_results.db"):
     """
     Testa robustez de um controlador PID em múltiplos cenários.
     
@@ -305,6 +291,18 @@ def testar_robustez(metodo, Kp, Ki, Kd, t_sim, setpoint=80.0, db_path="db/pid_re
     """
     from model.model import model, simulate
     
+    CENARIOS_ROBUSTEZ = {
+        "Nominal": {"K_term": k_term, "tau": tau, "desc": "Condições nominais"},
+        "C1": {"K_term": k_term - (0.1 * k_term), "tau": tau, "desc": "Degradação aquecedor (-10%)"},
+        "C2": {"K_term": k_term + (0.1 * k_term), "tau": tau, "desc": "Aquecedor eficiente (+10%)"},
+        "C3": {"K_term": k_term, "tau": tau - (0.1 * tau), "desc": "Menor capacidade térmica (-10%)"},
+        "C4": {"K_term": k_term, "tau": tau + (0.1 * tau), "desc": "Maior capacidade térmica (+10%)"},
+        "C5": {"K_term": k_term - (0.1 * k_term), "tau": tau + (0.1 * tau), "desc": "Degradação do aquecedor e maior capacidade térmica"},
+        "C6": {"K_term": k_term + (0.1 * k_term), "tau": tau + (0.1 * tau), "desc": "Aquecedor eficiente e maior capacidade térmica"},
+        "C7": {"K_term": k_term - (0.1 * k_term), "tau": tau - (0.1 * tau), "desc": "Degradação do aquecedor e menor capacidade térmica"},
+        "C8": {"K_term": k_term + (0.1 * k_term), "tau": tau - (0.1 * tau), "desc": "Aquecedor eficiente e menor capacidade térmica"},
+    }
+
     print(f"\n{'='*70}")
     print(f"TESTE DE ROBUSTEZ: {metodo}")
     print(f"{'='*70}")
